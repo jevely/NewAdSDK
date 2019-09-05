@@ -1,37 +1,32 @@
-package com.tb.adsdk
+package com.tb.adsdk.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
-import android.text.TextUtils
 import android.view.Display.STATE_ON
 import android.view.WindowManager
+import com.tb.adsdk.tool.Logger
 
 /**
- * Wifi广播
+ * 电池广播
  */
-class WifiReceiver : BroadcastReceiver() {
-
-    private val ANDROID_NET_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE"
-    private var mIsFirst = true
+class BatteryReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        if (TextUtils.equals(intent.action, ANDROID_NET_CHANGE_ACTION)) {
-
-            if (mIsFirst) {
-                mIsFirst = false
-                return
-            }
-
+        val action = intent.action
+        if (action === Intent.ACTION_BATTERY_OKAY
+            || action === Intent.ACTION_POWER_CONNECTED
+            || action === Intent.ACTION_POWER_DISCONNECTED) {
+            Logger.d("battery action")
+            //充电完成 插入USB 拔出USB
             val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
             val display = windowManager.defaultDisplay
 
-            if (display.state == STATE_ON) {
+            if (display.state != STATE_ON) {
                 return
             }
-
             //展示广告
 
         }

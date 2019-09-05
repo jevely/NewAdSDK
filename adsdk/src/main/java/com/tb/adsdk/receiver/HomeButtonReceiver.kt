@@ -1,8 +1,9 @@
-package com.tb.adsdk
+package com.tb.adsdk.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.tb.adsdk.tool.Logger
 
 /**
  * Home键监听
@@ -19,6 +20,7 @@ class HomeButtonReceiver : BroadcastReceiver() {
         if (action == Intent.ACTION_CLOSE_SYSTEM_DIALOGS) {
             val reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY)
             if (SYSTEM_DIALOG_REASON_HOME_KEY == reason) {//Home键点击
+                Logger.d("click home key")
                 //展示广告
 
             }

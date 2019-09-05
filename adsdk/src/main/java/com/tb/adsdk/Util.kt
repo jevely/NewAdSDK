@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import com.tb.adsdk.receiver.*
 
 fun initReceiver(context: Context){
     //锁屏广播
@@ -16,10 +18,8 @@ fun initReceiver(context: Context){
 
     //WIFI广播
     filter = IntentFilter()
-    filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-    filter.addAction("android.net.wifi.WIFI_STATE_CHANGED")
-    filter.addAction("android.net.wifi.STATE_CHANGE")
-    context.registerReceiver(WifiReceiver(), filter)
+    filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+    context.registerReceiver(NetReceiver(), filter)
 
     //电池广播
     filter = IntentFilter()
