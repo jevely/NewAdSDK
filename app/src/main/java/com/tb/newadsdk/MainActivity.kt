@@ -3,6 +3,10 @@ package com.tb.newadsdk
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.LinearLayout
+import com.tb.adsdk.ad.AdmobAd
+import com.tb.adsdk.ad.AdmobInitHelper
 import com.tb.adsdk.tool.AdBeanTool
 import com.tb.adsdk.tool.ConfigTool
 import com.tb.adsdk.tool.Logger
@@ -350,6 +354,7 @@ class MainActivity : AppCompatActivity() {
             "\t}\n" +
             "}"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -357,5 +362,28 @@ class MainActivity : AppCompatActivity() {
 
         ConfigTool.getLocalConfig(_Config)
         Logger.d("ad size = ${AdBeanTool.getInstance().beanMap.size}")
+
+        AdmobInitHelper.initAdmobSDK(this)
+
+        val banner_parent = findViewById<LinearLayout>(R.id.banner_parent)
+        val native_parent = findViewById<LinearLayout>(R.id.native_parent)
+
+        val admobAd = AdmobAd()
+
+        findViewById<Button>(R.id.bt1).setOnClickListener {
+            admobAd.interstitialAd(this)
+        }
+        findViewById<Button>(R.id.bt2).setOnClickListener {
+            admobAd.bannerAd(this, banner_parent)
+        }
+        findViewById<Button>(R.id.bt3).setOnClickListener {
+            admobAd.nativeAd(this, native_parent, true, true)
+        }
+        findViewById<Button>(R.id.bt4).setOnClickListener {
+            admobAd.nativeAd(this, native_parent, true, false)
+        }
+        findViewById<Button>(R.id.bt5).setOnClickListener {
+            admobAd.nativeAd(this, native_parent, false, false)
+        }
     }
 }

@@ -17,7 +17,7 @@ object ConfigTool {
         analyticConfig(config)
     }
 
-    fun getLocalConfig(config : String) {
+    fun getLocalConfig(config: String) {
         analyticConfig(config)
     }
 
@@ -239,6 +239,7 @@ object ConfigTool {
                             groupIdx1[j] = Integer.valueOf(groupIdx[j])
                         }
                         adBean.apGroupMaximum = groupIdx1
+                        adBean.maximum = groupIdx1[0]
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -306,12 +307,14 @@ object ConfigTool {
                                 adItem.groupName = item.optString("groupName")
                             }
                             adBean.items.add(adItem)
+                            adBean.item = adItem
                         }
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                AdBeanTool.getInstance().beanMap[adBean.id] = adBean
+                Logger.d("解析广告：${adBean.apName}")
+                AdBeanTool.getInstance().beanMap[adBean.apName] = adBean
             }
         } catch (e: JSONException) {
             e.printStackTrace()

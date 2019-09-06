@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.formats.UnifiedNativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/unifiednativeadview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ad_notification_view"
+            android:layout_width="@dimen/gnt_ad_indicator_width"
+            android:layout_height="@dimen/gnt_ad_indicator_height"
+            android:layout_marginStart="@dimen/gnt_default_margin"
+            android:layout_marginLeft="@dimen/gnt_default_margin"
+            android:layout_marginTop="@dimen/gnt_ad_indicator_top_margin"
+            android:background="@drawable/gnt_rounded_corners_shape"
+            android:gravity="center"
+            android:text="Ad"
+            android:textColor="@color/gnt_ad_green"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lines="1"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:typeface="normal" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/gnt_white" />
+
+        <TextView
+            android:id="@+id/content1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lines="1"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gnt_white"
+                android:lines="1"
+                android:textColor="@color/gnt_gray"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:id="@+id/content2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:lines="1"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/big_image"
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+
+<!--        <com.google.android.gms.ads.formats.MediaView-->
+<!--            android:id="@+id/media_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+
+        <Button
+            android:id="@+id/cta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@color/gnt_blue"
+            android:clickable="false"
+            android:gravity="center"
+            android:lines="1"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+</com.google.android.gms.ads.formats.UnifiedNativeAdView>

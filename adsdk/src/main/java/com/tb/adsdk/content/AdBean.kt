@@ -6,6 +6,9 @@ class AdBean {
     var apGroupMaximum: IntArray? = null
     var apGroupRequest: IntArray? = null
 
+    var requestCount: Int = 0
+    var maximum: Int = 99
+
     var enable: Boolean = false
     var enableTime: Long = 0L
     var enableGapTime: Long = 0L
@@ -25,5 +28,6 @@ class AdBean {
     var naDescClick: Boolean = true
 
     var items: MutableList<AdItemBean> = mutableListOf()
+    var item: AdItemBean ?= null
 
 }
