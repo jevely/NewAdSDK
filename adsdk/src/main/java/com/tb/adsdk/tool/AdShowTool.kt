@@ -1,7 +1,12 @@
 package com.tb.adsdk.tool
 
+import android.content.Context
 import android.text.TextUtils
+import android.view.View
+import com.tb.adsdk.ad.AdmobAd
+import com.tb.adsdk.ad.FacebookAd
 import com.tb.adsdk.content.AdBean
+import com.tb.adsdk.content.NomalAdBean
 import com.tb.adsdk.content.ParentBean
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,6 +33,16 @@ class AdShowTool private constructor() {
         }
     }
 
+    private val facebookad: FacebookAd = FacebookAd()
+    private val admobAd: AdmobAd = AdmobAd()
+
+    private lateinit var mContext: Context
+
+    fun init(context: Context) {
+        mContext = context
+    }
+
+    private lateinit var outShowAdView: View
     //外插
     fun showOutAd() {
 
@@ -51,7 +66,7 @@ class AdShowTool private constructor() {
 
         val adItemBean = adBean.item
         val parentBean = adItemBean?.adGroups?.get(adBean.requestCount % adBean.items.size)
-        when(adItemBean?.adType){
+        when (adItemBean?.adType) {
             "NORMAL" -> {
                 showNomalAd(parentBean!!)
             }
@@ -59,8 +74,25 @@ class AdShowTool private constructor() {
 
     }
 
-    fun showNomalAd(parentBean : ParentBean){
+    fun showNomalAd(parentBean: ParentBean) {
+        val nomalAdBean = parentBean as NomalAdBean
+        when (nomalAdBean.platFormName) {
+            "Facebook" -> {
+                //展示facebook广告
+                showFacebookAd(nomalAdBean)
+            }
+        }
+    }
 
+    fun showFacebookAd(nomalAdBean: NomalAdBean) {
+        when (nomalAdBean.adTypeName) {
+            "Native" -> {
+                facebookad.nativeAd(mContext, nomalAdBean.adLocation!!)
+            }
+            "Interstital" -> {
+                facebookad.InterstitalAd(mContext, nomalAdBean.adLocation!!)
+            }
+        }
     }
 
     fun checkNextDay(adBean: AdBean) {

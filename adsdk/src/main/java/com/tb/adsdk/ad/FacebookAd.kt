@@ -12,7 +12,7 @@ import com.tb.adsdk.tool.Logger
 import com.tb.adsdk.R
 
 
-class FaceBookAd {
+class FacebookAd {
 
     //插屏广告
     private var interstitialAd: InterstitialAd? = null
@@ -111,7 +111,7 @@ class FaceBookAd {
     //原生广告
     private var nativeAd: NativeAd? = null
 
-    fun nativeAd(context: Context, adId: String) {
+    fun nativeAd(context: Context, adId: String){
         nativeAd = NativeAd(context, adId)
         nativeAd?.setAdListener(object : NativeAdListener {
             override fun onMediaDownloaded(ad: Ad) {
