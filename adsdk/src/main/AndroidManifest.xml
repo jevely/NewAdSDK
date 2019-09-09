@@ -5,8 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application>
-        <activity android:name=".ShowAdActivity">
-        </activity>
+        <activity android:name=".ShowAdActivity"/>
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"

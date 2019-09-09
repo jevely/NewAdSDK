@@ -1,5 +1,6 @@
 package com.tb.adsdk
 
+import android.app.ActivityManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
@@ -7,8 +8,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import com.tb.adsdk.receiver.*
+import com.google.android.gms.common.internal.ConnectionErrorMessages.getAppName
+import com.tb.adsdk.tool.Logger
 
-fun initReceiver(context: Context){
+
+fun initReceiver(context: Context) {
     //锁屏广播
     var filter = IntentFilter()
     filter.addAction(Intent.ACTION_SCREEN_ON)
@@ -38,4 +42,28 @@ fun initReceiver(context: Context){
     //HOME键监听
     filter = IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
     context.registerReceiver(HomeButtonReceiver(), filter)
+}
+
+fun logProcessName(context: Context) {
+    val pid = android.os.Process.myPid()
+    Logger.d("当前进程位：${getAppName(context, pid)}")
+}
+
+fun getAppName(context: Context, pid: Int): String? {
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val list = activityManager.getRunningAppProcesses()
+    val i = list.iterator()
+    while (i.hasNext()) {
+        val info = i.next() as ActivityManager.RunningAppProcessInfo
+        try {
+            if (info.pid == pid) {
+                // 根据进程的信息获取当前进程的名字
+                return info.processName;
+            }
+        } catch (e: Exception) {
+            e.printStackTrace();
+        }
+    }
+    // 没有匹配的项，返回为null
+    return null
 }

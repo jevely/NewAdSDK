@@ -1,6 +1,7 @@
 package com.tb.adsdk.ad
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.Image
@@ -18,6 +19,8 @@ import com.tb.adsdk.tool.Logger
 import com.google.android.ads.nativetemplates.TemplateView
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
 import com.google.android.gms.ads.formats.MediaView
+import com.tb.adsdk.ShowAdActivity
+import com.tb.adsdk.logProcessName
 
 /**
  * 横幅广告	ca-app-pub-3940256099942544/6300978111
@@ -28,7 +31,6 @@ import com.google.android.gms.ads.formats.MediaView
  * 原生高级视频广告	ca-app-pub-3940256099942544/1044960115
  */
 class AdmobAd {
-
 
     //插屏广告
     private lateinit var mInterstitialAd: InterstitialAd
@@ -129,12 +131,12 @@ class AdmobAd {
         parent.addView(adView)
     }
 
+    var preAdmobShowAdView: View ?= null
     //原生广告
     lateinit var adLoader: AdLoader
 
     fun nativeAd(
         context: Context,
-        parent: ViewGroup,
         isDefaultLayout: Boolean,
         isSmallLayout: Boolean
     ) {
@@ -148,12 +150,12 @@ class AdmobAd {
                     // The AdLoader has finished loading ads.
                     if (isDefaultLayout) {
                         if (isSmallLayout) {
-                            loadDefaultNativeLayout(context, ad, parent)
+                            loadDefaultNativeLayout(context, ad)
                         } else {
-                            loadDefaultNativeLayout2(context, ad, parent)
+                            loadDefaultNativeLayout2(context, ad)
                         }
                     } else {
-                        loadAdmobNativeLayout(context, ad, parent)
+                        loadAdmobNativeLayout(context, ad)
                     }
                 }
             }
@@ -194,7 +196,7 @@ class AdmobAd {
 //        adLoader.loadAds(AdRequest.Builder().build(), 3)//max is load 5 ads
     }
 
-    private fun loadAdmobNativeLayout(context: Context, ad: UnifiedNativeAd, parent: ViewGroup) {
+    private fun loadAdmobNativeLayout(context: Context, ad: UnifiedNativeAd) {
 
         val parentView = LayoutInflater.from(context).inflate(R.layout.admob_native_layout, null)
 
@@ -222,8 +224,11 @@ class AdmobAd {
         cta.text = ad.callToAction
         adView.callToActionView = cta
 
-        icon.setImageDrawable(ad.getIcon().drawable)
-        adView.iconView = icon
+        val adIcon = ad.icon
+        if (adIcon != null) {
+            icon.setImageDrawable(adIcon.drawable)
+            adView.iconView = icon
+        }
 
         val images = ad.images
         if (images.isNotEmpty()) {
@@ -237,13 +242,16 @@ class AdmobAd {
 
         adView.setNativeAd(ad)
 
-        parent.addView(adView)
+        preAdmobShowAdView = adView
+        Logger.d("adView = $adView")
+        Logger.d("preAdmobShowAdView = $preAdmobShowAdView")
+        logProcessName(context)
+        goToShow(context)
     }
 
     private fun loadDefaultNativeLayout(
         context: Context,
-        unifiedNativeAd: UnifiedNativeAd,
-        parent: ViewGroup
+        unifiedNativeAd: UnifiedNativeAd
     ) {
         val styles = NativeTemplateStyle.Builder()
             .withMainBackgroundColor(ColorDrawable(Color.parseColor("#ffffff"))).build()
@@ -252,13 +260,13 @@ class AdmobAd {
         val template = parentView.findViewById<TemplateView>(R.id.my_template_small)
         template.setStyles(styles)
         template.setNativeAd(unifiedNativeAd)
-        parent.addView(parentView)
+        preAdmobShowAdView = parentView
+        goToShow(context)
     }
 
     private fun loadDefaultNativeLayout2(
         context: Context,
-        unifiedNativeAd: UnifiedNativeAd,
-        parent: ViewGroup
+        unifiedNativeAd: UnifiedNativeAd
     ) {
         val styles = NativeTemplateStyle.Builder()
             .withMainBackgroundColor(ColorDrawable(Color.parseColor("#000000"))).build()
@@ -267,7 +275,14 @@ class AdmobAd {
         val template = parentView.findViewById<TemplateView>(R.id.my_template_nomal)
         template.setStyles(styles)
         template.setNativeAd(unifiedNativeAd)
-        parent.addView(parentView)
+        preAdmobShowAdView = parentView
+        goToShow(context)
+    }
+
+    fun goToShow(context: Context) {
+        val intent = Intent(context, ShowAdActivity::class.java)
+        intent.putExtra("ad", "admob")
+        context.startActivity(intent)
     }
 
 }

@@ -7,7 +7,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import com.tb.adsdk.ad.AdmobAd
 import com.tb.adsdk.ad.AdmobInitHelper
+import com.tb.adsdk.logProcessName
 import com.tb.adsdk.tool.AdBeanTool
+import com.tb.adsdk.tool.AdShowTool
 import com.tb.adsdk.tool.ConfigTool
 import com.tb.adsdk.tool.Logger
 
@@ -376,14 +378,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.bt2).setOnClickListener {
             admobAd.bannerAd(this, banner_parent)
         }
-        findViewById<Button>(R.id.bt3).setOnClickListener {
-            admobAd.nativeAd(this, native_parent, true, true)
-        }
-        findViewById<Button>(R.id.bt4).setOnClickListener {
-            admobAd.nativeAd(this, native_parent, true, false)
-        }
+//        findViewById<Button>(R.id.bt3).setOnClickListener {
+//            admobAd.nativeAd(this, native_parent, true, true)
+//        }
+//        findViewById<Button>(R.id.bt4).setOnClickListener {
+//            admobAd.nativeAd(this, native_parent, true, false)
+//        }
         findViewById<Button>(R.id.bt5).setOnClickListener {
-            admobAd.nativeAd(this, native_parent, false, false)
+            AdShowTool.getInstance().admobAd.nativeAd(this, false, false)
+            logProcessName(this@MainActivity)
         }
     }
 }

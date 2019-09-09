@@ -1,6 +1,7 @@
 package com.tb.adsdk.ad
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,12 @@ import android.widget.TextView
 import com.facebook.ads.*
 import com.tb.adsdk.tool.Logger
 import com.tb.adsdk.R
+import com.tb.adsdk.ShowAdActivity
 
 
 class FacebookAd {
+
+    lateinit var preShowFacebookAdView: View
 
     //插屏广告
     private var interstitialAd: InterstitialAd? = null
@@ -88,6 +92,7 @@ class FacebookAd {
 
             override fun onAdLoaded(ad: Ad) {
                 // Ad loaded callback
+
             }
 
             override fun onAdClicked(ad: Ad) {
@@ -111,7 +116,7 @@ class FacebookAd {
     //原生广告
     private var nativeAd: NativeAd? = null
 
-    fun nativeAd(context: Context, adId: String){
+    fun nativeAd(context: Context, adId: String) {
         nativeAd = NativeAd(context, adId)
         nativeAd?.setAdListener(object : NativeAdListener {
             override fun onMediaDownloaded(ad: Ad) {
@@ -130,15 +135,15 @@ class FacebookAd {
                     return
                 }
                 Logger.d("Native ad is loaded and ready to be displayed!")
-                if(!nativeAd!!.isAdLoaded) {
+                if (!nativeAd!!.isAdLoaded) {
                     return
                 }
                 // Check if ad is already expired or invalidated, and do not show ad if that is the case. You will not get paid to show an invalidated ad.
-                if(nativeAd!!.isAdInvalidated) {
+                if (nativeAd!!.isAdInvalidated) {
                     return
                 }
 
-                inflateAd(context,nativeAd!!)
+                inflateAd(context, nativeAd!!)
             }
 
             override fun onAdClicked(ad: Ad) {
@@ -165,7 +170,8 @@ class FacebookAd {
         val nativeAdLayout = parentView.findViewById<NativeAdLayout>(R.id.native_ad_container)
         val inflater = LayoutInflater.from(context)
         // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-        val adView = inflater.inflate(R.layout.facebook_native_layout, nativeAdLayout, false) as LinearLayout
+        val adView =
+            inflater.inflate(R.layout.facebook_native_layout, nativeAdLayout, false) as LinearLayout
         nativeAdLayout.addView(adView)
 
         // Add the AdOptionsView
@@ -204,10 +210,16 @@ class FacebookAd {
             nativeAdIcon,
             clickableViews
         )
+
+        preShowFacebookAdView = parentView
+        //跳转activity
+        val intent = Intent(context, ShowAdActivity::class.java)
+        intent.putExtra("ad", "fb")
+        context.startActivity(intent)
     }
 
     //原生banner广告
-    fun nativeBannerAd(){
+    fun nativeBannerAd() {
 
     }
 

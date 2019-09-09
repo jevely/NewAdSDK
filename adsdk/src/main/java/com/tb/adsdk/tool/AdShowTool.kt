@@ -33,8 +33,8 @@ class AdShowTool private constructor() {
         }
     }
 
-    private val facebookad: FacebookAd = FacebookAd()
-    private val admobAd: AdmobAd = AdmobAd()
+    val facebookad: FacebookAd = FacebookAd()
+    val admobAd: AdmobAd = AdmobAd()
 
     private lateinit var mContext: Context
 
@@ -81,6 +81,9 @@ class AdShowTool private constructor() {
                 //展示facebook广告
                 showFacebookAd(nomalAdBean)
             }
+            "Admob" -> {
+                showAdmobAd(nomalAdBean)
+            }
         }
     }
 
@@ -91,6 +94,17 @@ class AdShowTool private constructor() {
             }
             "Interstital" -> {
                 facebookad.InterstitalAd(mContext, nomalAdBean.adLocation!!)
+            }
+        }
+    }
+
+    fun showAdmobAd(nomalAdBean: NomalAdBean) {
+        when (nomalAdBean.adTypeName) {
+            "Native" -> {
+                admobAd.nativeAd(mContext, false, false)
+            }
+            "Interstital" -> {
+                admobAd.interstitialAd(mContext)
             }
         }
     }
