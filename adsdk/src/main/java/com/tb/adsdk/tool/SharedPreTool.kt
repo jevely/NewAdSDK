@@ -27,6 +27,7 @@ class SharedPreTool private constructor() {
 
         val INSTALL_TIME = "install_time"
         val LAST_SHOW_AD_TIME = "last_show_ad_time"
+        val START_APP_TIME = "start_app_time"
     }
 
     private lateinit var sharedPre: SharedPreferences

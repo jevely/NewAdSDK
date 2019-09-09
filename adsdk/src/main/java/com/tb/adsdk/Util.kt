@@ -44,9 +44,11 @@ fun initReceiver(context: Context) {
     context.registerReceiver(HomeButtonReceiver(), filter)
 }
 
-fun logProcessName(context: Context) {
+fun logProcessName(context: Context): String? {
     val pid = android.os.Process.myPid()
-    Logger.d("当前进程位：${getAppName(context, pid)}")
+    val name = getAppName(context, pid)
+    Logger.d("当前进程位：$name")
+    return name
 }
 
 fun getAppName(context: Context, pid: Int): String? {

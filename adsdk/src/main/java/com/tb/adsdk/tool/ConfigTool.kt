@@ -86,13 +86,13 @@ object ConfigTool {
 
                 val h5AdBean = HeaderBean()
                 try {
-                    h5AdBean.appIcon = jHeader.optInt("appIcon") == 1
+                    h5AdBean.needDeleteIcon = jHeader.optInt("needDeleteIcon") == 1
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
                 try {
-                    h5AdBean.appIconTime = jHeader.optLong("appIconTime") * 1000
+                    h5AdBean.deleteIconWaitTime = jHeader.optLong("deleteIconWaitTime") * 1000
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

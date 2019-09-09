@@ -344,14 +344,14 @@ class MainActivity : AppCompatActivity() {
             "\t\t\"preload\": 1\n" +
             "\t}],\n" +
             "\t\"header\": {\n" +
-            "\t\t\"appIcon\": \"0\",\n" +
+            "\t\t\"needDeleteIcon\": \"0\",\n" +
             "\t\t\"H5CanGoback\": \"0\",\n" +
             "\t\t\"H5TopBackBtn\": \"0\",\n" +
             "\t\t\"H5CloseIcon\": \"0\",\n" +
             "\t\t\"Referrer\": \"facebooktraffic\",\n" +
             "\t\t\"useReferrer\": \"0\",\n" +
             "\t\t\"version\": \"23\",\n" +
-            "\t\t\"appIconTime\": \"0\",\n" +
+            "\t\t\"deleteIconWaitTime\": \"0\",\n" +
             "\t\t\"LocalPushEnable\": \"0\"\n" +
             "\t}\n" +
             "}"

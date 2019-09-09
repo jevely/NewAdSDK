@@ -42,7 +42,6 @@ class AdShowTool private constructor() {
         mContext = context
     }
 
-    private lateinit var outShowAdView: View
     //外插
     fun showOutAd() {
 
@@ -87,7 +86,11 @@ class AdShowTool private constructor() {
         }
     }
 
-    fun showFacebookAd(nomalAdBean: NomalAdBean) {
+    private fun showFacebookAd(nomalAdBean: NomalAdBean) {
+
+        if (TextUtils.isEmpty(nomalAdBean.adLocation))
+            return
+
         when (nomalAdBean.adTypeName) {
             "Native" -> {
                 facebookad.nativeAd(mContext, nomalAdBean.adLocation!!)
@@ -98,7 +101,7 @@ class AdShowTool private constructor() {
         }
     }
 
-    fun showAdmobAd(nomalAdBean: NomalAdBean) {
+    private fun showAdmobAd(nomalAdBean: NomalAdBean) {
         when (nomalAdBean.adTypeName) {
             "Native" -> {
                 admobAd.nativeAd(mContext, false, false)
@@ -109,7 +112,7 @@ class AdShowTool private constructor() {
         }
     }
 
-    fun checkNextDay(adBean: AdBean) {
+    private fun checkNextDay(adBean: AdBean) {
         val last_show_ad_time = SharedPreTool.getInstance().getLong(SharedPreTool.LAST_SHOW_AD_TIME)
         val simpleDateFormat = SimpleDateFormat("dd")
         val last_date = Date(last_show_ad_time)

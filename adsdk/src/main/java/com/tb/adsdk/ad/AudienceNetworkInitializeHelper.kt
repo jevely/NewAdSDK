@@ -8,16 +8,19 @@ import com.tb.adsdk.tool.Logger
 
 class AudienceNetworkInitializeHelper : AudienceNetworkAds.InitListener {
 
-    internal fun initialize(context: Context) {
-        if (!AudienceNetworkAds.isInitialized(context)) {
-            if (DEBUG) {
-                AdSettings.turnOnSDKDebugger(context)
-            }
 
-            AudienceNetworkAds
-                .buildInitSettings(context)
-                .withInitListener(AudienceNetworkInitializeHelper())
-                .initialize()
+    companion object {
+        fun initialize(context: Context) {
+            if (!AudienceNetworkAds.isInitialized(context)) {
+                if (DEBUG) {
+                    AdSettings.turnOnSDKDebugger(context)
+                }
+
+                AudienceNetworkAds
+                    .buildInitSettings(context)
+                    .withInitListener(AudienceNetworkInitializeHelper())
+                    .initialize()
+            }
         }
     }
 

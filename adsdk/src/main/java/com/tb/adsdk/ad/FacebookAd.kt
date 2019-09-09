@@ -2,6 +2,7 @@ package com.tb.adsdk.ad
 
 import android.content.Context
 import android.content.Intent
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -189,13 +190,31 @@ class FacebookAd {
         val sponsoredLabel = adView.findViewById<TextView>(R.id.native_ad_sponsored_label)
         val nativeAdCallToAction = adView.findViewById<Button>(R.id.native_ad_call_to_action)
 
-        // Set the Text.
-        nativeAdTitle.setText(nativeAd.advertiserName)
-        nativeAdBody.setText(nativeAd.adBodyText)
-        nativeAdSocialContext.setText(nativeAd.adSocialContext)
-        nativeAdCallToAction.setVisibility(if (nativeAd.hasCallToAction()) View.VISIBLE else View.INVISIBLE)
-        nativeAdCallToAction.setText(nativeAd.adCallToAction)
-        sponsoredLabel.setText(nativeAd.sponsoredTranslation)
+
+        val title = nativeAd.advertiserName
+        if (!TextUtils.isEmpty(title))
+            nativeAdTitle.text = title
+
+        val content1 = nativeAd.adBodyText
+        if (!TextUtils.isEmpty(content1))
+            nativeAdBody.text = content1
+
+        val content2 = nativeAd.adSocialContext
+        if (!TextUtils.isEmpty(content2))
+            nativeAdSocialContext.text = content2
+
+        if (nativeAd.hasCallToAction()) {
+            nativeAdCallToAction.visibility = View.VISIBLE
+            val action = nativeAd.adCallToAction
+            if (!TextUtils.isEmpty(action))
+                nativeAdCallToAction.text = action
+        } else {
+            nativeAdCallToAction.visibility = View.INVISIBLE
+        }
+
+        val more = nativeAd.sponsoredTranslation
+        if (!TextUtils.isEmpty(more))
+            sponsoredLabel.text = more
 
         // Create a list of clickable views
         val clickableViews = mutableListOf<View>()
@@ -207,7 +226,6 @@ class FacebookAd {
         nativeAd.registerViewForInteraction(
             adView,
             nativeAdMedia,
-            nativeAdIcon,
             clickableViews
         )
 
