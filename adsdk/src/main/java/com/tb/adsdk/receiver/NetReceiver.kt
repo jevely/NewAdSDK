@@ -11,6 +11,8 @@ import com.tb.adsdk.tool.Logger
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.core.content.ContextCompat.getSystemService
+import com.tb.adsdk.tool.AdBeanTool
+import com.tb.adsdk.tool.AdShowTool
 
 
 /**
@@ -58,7 +60,8 @@ class NetReceiver : BroadcastReceiver() {
         if (System.currentTimeMillis() - inBroadTime > 1000 * 60) {
             inBroadTime = System.currentTimeMillis()
             Logger.d("show net ad")
-
+            val adBean = AdBeanTool.getInstance().beanMap["outside"] ?: return
+            AdShowTool.getInstance().showAd(adBean)
         }
     }
 

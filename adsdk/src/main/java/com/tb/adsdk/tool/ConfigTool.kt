@@ -170,21 +170,21 @@ object ConfigTool {
                 }
 
                 try {
-                    //底部back按钮延迟时间
+                    //头上角按钮延迟时间
                     adBean.naCbDelayTime = jsonObj.optInt("naCbDelayTime") * 1000L
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
                 try {
-                    //右上角关闭按钮
+                    //back按钮
                     adBean.naRbClick = jsonObj.optInt("naRbClick") == 1
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
                 try {
-                    //右上角关闭按钮现实延迟时间
+                    //back按钮现实延迟时间
                     adBean.naRbDelayTime = jsonObj.optInt("naRbDelayTime") * 1000L
                 } catch (e: Exception) {
                     e.printStackTrace()

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import com.tb.adsdk.tool.AdBeanTool
 import com.tb.adsdk.tool.AdShowTool
 import com.tb.adsdk.tool.Logger
 
@@ -22,7 +23,8 @@ class LockScreenReceiver : BroadcastReceiver() {
                 AudioManager.MODE_RINGTONE, AudioManager.MODE_IN_CALL, AudioManager.MODE_IN_COMMUNICATION -> return
             }
             //展示广告
-            AdShowTool.getInstance().showOutAd()
+            val adBean = AdBeanTool.getInstance().beanMap["outside"] ?: return
+            AdShowTool.getInstance().showAd(adBean)
         }
     }
 

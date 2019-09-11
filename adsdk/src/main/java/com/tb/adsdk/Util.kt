@@ -7,9 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.Looper
+import android.widget.Toast
+import com.facebook.ads.AdSettings
 import com.tb.adsdk.receiver.*
 import com.google.android.gms.common.internal.ConnectionErrorMessages.getAppName
 import com.tb.adsdk.tool.Logger
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 fun initReceiver(context: Context) {

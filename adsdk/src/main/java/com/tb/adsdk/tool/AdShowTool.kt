@@ -42,18 +42,32 @@ class AdShowTool private constructor() {
         mContext = context
     }
 
-    //外插
-    fun showOutAd() {
+    fun showPopupAd() {
+        val adBean = AdBeanTool.getInstance().beanMap["popup"] ?: return
+        showAd(adBean)
+    }
 
-        val adBean = AdBeanTool.getInstance().beanMap["outside"] ?: return
+    var last_inner_show_time = 0L
+
+    fun showAd(adBean: AdBean) {
 
         if (!adBean.enable) {
             return
         }
 
-        val waitTime =
-            System.currentTimeMillis() - SharedPreTool.getInstance().getLong(SharedPreTool.INSTALL_TIME)
-        if (waitTime < adBean.enableTime) {
+//        val waitTime =
+//            System.currentTimeMillis() - SharedPreTool.getInstance().getLong(SharedPreTool.INSTALL_TIME)
+//        if (waitTime < adBean.enableTime) {
+//            return
+//        }
+
+        //广告延迟展示时间
+        if (System.currentTimeMillis() - SharedPreTool.getInstance().getLong(SharedPreTool.START_APP_TIME) < adBean.enableTime) {
+            return
+        }
+
+        //间隔时间
+        if (System.currentTimeMillis() - last_inner_show_time < adBean.enableGapTime) {
             return
         }
 
@@ -63,37 +77,39 @@ class AdShowTool private constructor() {
             return
         }
 
+        Logger.d("show ${adBean.apName} ad")
+
         val adItemBean = adBean.item
         val parentBean = adItemBean?.adGroups?.get(adBean.requestCount % adBean.items.size)
         when (adItemBean?.adType) {
             "NORMAL" -> {
-                showNomalAd(parentBean!!)
+                showNomalAd(parentBean!!, adBean)
             }
         }
-
+        last_inner_show_time = System.currentTimeMillis()
     }
 
-    fun showNomalAd(parentBean: ParentBean) {
+    private fun showNomalAd(parentBean: ParentBean, adBean: AdBean) {
         val nomalAdBean = parentBean as NomalAdBean
         when (nomalAdBean.platFormName) {
             "Facebook" -> {
                 //展示facebook广告
-                showFacebookAd(nomalAdBean)
+                showFacebookAd(nomalAdBean, adBean)
             }
             "Admob" -> {
-                showAdmobAd(nomalAdBean)
+                showAdmobAd(nomalAdBean, adBean)
             }
         }
     }
 
-    private fun showFacebookAd(nomalAdBean: NomalAdBean) {
+    private fun showFacebookAd(nomalAdBean: NomalAdBean, adBean: AdBean) {
 
         if (TextUtils.isEmpty(nomalAdBean.adLocation))
             return
 
         when (nomalAdBean.adTypeName) {
             "Native" -> {
-                facebookad.nativeAd(mContext, nomalAdBean.adLocation!!)
+                facebookad.nativeAd(mContext, nomalAdBean.adLocation!!, adBean)
             }
             "Interstital" -> {
                 facebookad.InterstitalAd(mContext, nomalAdBean.adLocation!!)
@@ -101,13 +117,13 @@ class AdShowTool private constructor() {
         }
     }
 
-    private fun showAdmobAd(nomalAdBean: NomalAdBean) {
+    private fun showAdmobAd(nomalAdBean: NomalAdBean, adBean: AdBean) {
         when (nomalAdBean.adTypeName) {
             "Native" -> {
-                admobAd.nativeAd(mContext, false, false)
+                admobAd.nativeAd(mContext, nomalAdBean.adLocation!!, adBean, false, false)
             }
             "Interstital" -> {
-                admobAd.interstitialAd(mContext)
+                admobAd.interstitialAd(mContext, nomalAdBean.adLocation!!)
             }
         }
     }

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.os.Bundle
+import android.os.Looper
+import android.widget.Toast
 import com.tb.adsdk.ad.AdmobInitHelper
 import com.tb.adsdk.ad.AudienceNetworkInitializeHelper
 import com.tb.adsdk.initReceiver
@@ -11,6 +13,8 @@ import com.tb.adsdk.tool.ActivityLifeTool
 import com.tb.adsdk.tool.AdManager
 import com.tb.adsdk.tool.AdShowTool
 import com.tb.adsdk.tool.Logger
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class MyApplication : Application(), ComponentCallbacks2 {
 
@@ -53,4 +57,5 @@ class MyApplication : Application(), ComponentCallbacks2 {
             }
         })
     }
+
 }

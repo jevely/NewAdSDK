@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.Display
 import android.view.WindowManager
+import com.tb.adsdk.tool.AdBeanTool
+import com.tb.adsdk.tool.AdShowTool
 import com.tb.adsdk.tool.Logger
 
 /**
@@ -27,6 +29,8 @@ class BluetoothReceiver : BroadcastReceiver() {
                     return
                 }
                 //展示广告
+                val adBean = AdBeanTool.getInstance().beanMap["outside"] ?: return
+                AdShowTool.getInstance().showAd(adBean)
             }
         }
     }

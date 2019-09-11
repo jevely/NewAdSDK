@@ -20,6 +20,7 @@ import com.google.android.ads.nativetemplates.TemplateView
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
 import com.google.android.gms.ads.formats.MediaView
 import com.tb.adsdk.ShowAdActivity
+import com.tb.adsdk.content.AdBean
 import com.tb.adsdk.logProcessName
 
 /**
@@ -35,7 +36,7 @@ class AdmobAd {
     //插屏广告
     private lateinit var mInterstitialAd: InterstitialAd
 
-    fun interstitialAd(context: Context) {
+    fun interstitialAd(context: Context, adId: String) {
         mInterstitialAd = InterstitialAd(context)
         mInterstitialAd.adUnitId = "ca-app-pub-3940256099942544/1033173712"
 
@@ -131,12 +132,14 @@ class AdmobAd {
         parent.addView(adView)
     }
 
-    var preAdmobShowAdView: View ?= null
+    var preAdmobShowAdView: View? = null
     //原生广告
     lateinit var adLoader: AdLoader
 
     fun nativeAd(
         context: Context,
+        adId: String,
+        adBean: AdBean,
         isDefaultLayout: Boolean,
         isSmallLayout: Boolean
     ) {
@@ -155,7 +158,7 @@ class AdmobAd {
                             loadDefaultNativeLayout2(context, ad)
                         }
                     } else {
-                        loadAdmobNativeLayout(context, ad)
+                        loadAdmobNativeLayout(context, ad, adBean)
                     }
                 }
             }
@@ -196,7 +199,7 @@ class AdmobAd {
 //        adLoader.loadAds(AdRequest.Builder().build(), 3)//max is load 5 ads
     }
 
-    private fun loadAdmobNativeLayout(context: Context, ad: UnifiedNativeAd) {
+    private fun loadAdmobNativeLayout(context: Context, ad: UnifiedNativeAd, adBean: AdBean) {
 
         val parentView = LayoutInflater.from(context).inflate(R.layout.admob_native_layout, null)
 
@@ -213,13 +216,15 @@ class AdmobAd {
         rating_bar.visibility = View.GONE
 
         title.text = ad.advertiser
-        adView.advertiserView = title
+        if (adBean.naTitleClick)
+            adView.advertiserView = title
 
         content1.text = ad.headline
-        adView.headlineView = content1
-
         content2.text = ad.body
-        adView.bodyView = content2
+        if (adBean.naDescClick) {
+            adView.headlineView = content1
+            adView.bodyView = content2
+        }
 
         cta.text = ad.callToAction
         adView.callToActionView = cta
@@ -227,16 +232,17 @@ class AdmobAd {
         val adIcon = ad.icon
         if (adIcon != null) {
             icon.setImageDrawable(adIcon.drawable)
-            adView.iconView = icon
+            if (adBean.naIconClick)
+                adView.iconView = icon
         }
 
         val images = ad.images
         if (images.isNotEmpty()) {
             val image = images[0]
             big_image.setImageDrawable(image.drawable)
+            if (adBean.naRbClick)
+                adView.imageView = big_image
         }
-
-        adView.imageView = big_image
 
 //        adView.mediaView = media_view
 

@@ -1,10 +1,12 @@
 package com.tb.adsdk.tool
 
 import android.content.Context
+import android.content.Intent
 import com.tb.adsdk.ad.AdmobInitHelper
 import com.tb.adsdk.ad.AudienceNetworkInitializeHelper
 import com.tb.adsdk.initReceiver
 import com.tb.adsdk.logProcessName
+import com.tb.adsdk.service.InnerService
 
 object AdManager {
 
@@ -34,36 +36,9 @@ object AdManager {
         AdShowTool.getInstance().init(context)
     }
 
-    fun activityInit() {
-
+    fun activityInit(context: Context) {
+        context.startService(Intent(context, InnerService::class.java))
     }
 
-    var last_inner_show_time = 0L
-    var in_app = true
-    fun innerInit() {
-        val adBean = AdBeanTool.getInstance().beanMap["inner"] ?: return
-
-        if (!adBean.enable) {
-            return
-        }
-
-        //广告延迟展示时间
-        if (System.currentTimeMillis() - SharedPreTool.getInstance().getLong(SharedPreTool.START_APP_TIME) < adBean.enableTime) {
-            return
-        }
-
-        //间隔时间
-        if (System.currentTimeMillis() - last_inner_show_time < adBean.enableGapTime) {
-            return
-        }
-
-        //判断是否在应用内
-        if (ActivityLifeTool.getInstance().outApp()) {
-            return
-        }
-
-
-
-    }
 
 }

@@ -53,6 +53,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
+
+        <com.tb.adsdk.view.BannerView
+            android:id="@+id/bannerview"
+            android:background="#2C46C7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 

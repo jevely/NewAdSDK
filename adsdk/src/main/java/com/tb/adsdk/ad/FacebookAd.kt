@@ -13,6 +13,7 @@ import com.facebook.ads.*
 import com.tb.adsdk.tool.Logger
 import com.tb.adsdk.R
 import com.tb.adsdk.ShowAdActivity
+import com.tb.adsdk.content.AdBean
 
 
 class FacebookAd {
@@ -117,7 +118,7 @@ class FacebookAd {
     //原生广告
     private var nativeAd: NativeAd? = null
 
-    fun nativeAd(context: Context, adId: String) {
+    fun nativeAd(context: Context, adId: String, adBean: AdBean) {
         nativeAd = NativeAd(context, adId)
         nativeAd?.setAdListener(object : NativeAdListener {
             override fun onMediaDownloaded(ad: Ad) {
@@ -144,7 +145,7 @@ class FacebookAd {
                     return
                 }
 
-                inflateAd(context, nativeAd!!)
+                inflateAd(context, nativeAd!!, adBean)
             }
 
             override fun onAdClicked(ad: Ad) {
@@ -162,78 +163,98 @@ class FacebookAd {
         nativeAd?.loadAd()
     }
 
-    private fun inflateAd(context: Context, nativeAd: NativeAd) {
+    private fun inflateAd(context: Context, nativeAd: NativeAd, adBean: AdBean) {
+        try {
+            nativeAd.unregisterView()
 
-        nativeAd.unregisterView()
+            val inflater = LayoutInflater.from(context)
+            val parentView = inflater.inflate(R.layout.facebook_native_layout,null)
+            val adView = parentView.findViewById<NativeAdLayout>(R.id.native_ad_container)
 
-        val parentView = LayoutInflater.from(context).inflate(R.layout.facebook_parent_layout, null)
-        // Add the Ad view into the ad container.
-        val nativeAdLayout = parentView.findViewById<NativeAdLayout>(R.id.native_ad_container)
-        val inflater = LayoutInflater.from(context)
-        // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-        val adView =
-            inflater.inflate(R.layout.facebook_native_layout, nativeAdLayout, false) as LinearLayout
-        nativeAdLayout.addView(adView)
+            // Add the AdOptionsView
+            val adChoicesContainer = adView.findViewById<LinearLayout>(R.id.ad_choices_container)
+            val adOptionsView = AdOptionsView(context, nativeAd, adView)
+            adChoicesContainer.removeAllViews()
+            adChoicesContainer.addView(adOptionsView, 0)
 
-        // Add the AdOptionsView
-        val adChoicesContainer = adView.findViewById<LinearLayout>(R.id.ad_choices_container)
-        val adOptionsView = AdOptionsView(context, nativeAd, nativeAdLayout)
-        adChoicesContainer.removeAllViews()
-        adChoicesContainer.addView(adOptionsView, 0)
-
-        // Create native UI using the ad metadata.
-        val nativeAdIcon = adView.findViewById<AdIconView>(R.id.native_ad_icon)
-        val nativeAdTitle = adView.findViewById<TextView>(R.id.native_ad_title)
-        val nativeAdMedia = adView.findViewById<MediaView>(R.id.native_ad_media)
-        val nativeAdSocialContext = adView.findViewById<TextView>(R.id.native_ad_social_context)
-        val nativeAdBody = adView.findViewById<TextView>(R.id.native_ad_body)
-        val sponsoredLabel = adView.findViewById<TextView>(R.id.native_ad_sponsored_label)
-        val nativeAdCallToAction = adView.findViewById<Button>(R.id.native_ad_call_to_action)
+            // Create native UI using the ad metadata.
+            val nativeAdIcon = adView.findViewById<MediaView>(R.id.native_ad_icon)
+            val nativeAdTitle = adView.findViewById<TextView>(R.id.native_ad_title)
+            val nativeAdMedia = adView.findViewById<MediaView>(R.id.native_ad_media)
+            val nativeAdSocialContext = adView.findViewById<TextView>(R.id.native_ad_social_context)
+            val nativeAdBody = adView.findViewById<TextView>(R.id.native_ad_body)
+            val sponsoredLabel = adView.findViewById<TextView>(R.id.native_ad_sponsored_label)
+            val nativeAdCallToAction = adView.findViewById<Button>(R.id.native_ad_call_to_action)
 
 
-        val title = nativeAd.advertiserName
-        if (!TextUtils.isEmpty(title))
-            nativeAdTitle.text = title
+            Logger.d("nativeAd.adBodyText = ${nativeAd.adBodyText}")
+            Logger.d("nativeAd.advertiserName = ${nativeAd.advertiserName}")
+            Logger.d("nativeAd.adCallToAction = ${nativeAd.adCallToAction}")
+            Logger.d("nativeAd.adHeadline = ${nativeAd.adHeadline}")
+            Logger.d("nativeAd.adSocialContext = ${nativeAd.adSocialContext}")
+            Logger.d("nativeAd.adTranslation = ${nativeAd.adTranslation}")
+            Logger.d("nativeAd.sponsoredTranslation = ${nativeAd.sponsoredTranslation}")
 
-        val content1 = nativeAd.adBodyText
-        if (!TextUtils.isEmpty(content1))
-            nativeAdBody.text = content1
+            val title = nativeAd.advertiserName
+            if (!TextUtils.isEmpty(title))
+                nativeAdTitle.text = title
 
-        val content2 = nativeAd.adSocialContext
-        if (!TextUtils.isEmpty(content2))
-            nativeAdSocialContext.text = content2
+            val content1 = nativeAd.adBodyText
+            if (!TextUtils.isEmpty(content1))
+                nativeAdBody.text = content1
 
-        if (nativeAd.hasCallToAction()) {
-            nativeAdCallToAction.visibility = View.VISIBLE
-            val action = nativeAd.adCallToAction
-            if (!TextUtils.isEmpty(action))
-                nativeAdCallToAction.text = action
-        } else {
-            nativeAdCallToAction.visibility = View.INVISIBLE
+            val content2 = nativeAd.adSocialContext
+            if (!TextUtils.isEmpty(content2))
+                nativeAdSocialContext.text = content2
+
+            if (nativeAd.hasCallToAction()) {
+                nativeAdCallToAction.visibility = View.VISIBLE
+                val action = nativeAd.adCallToAction
+                if (!TextUtils.isEmpty(action))
+                    nativeAdCallToAction.text = action
+            } else {
+                nativeAdCallToAction.visibility = View.INVISIBLE
+            }
+
+            val more = nativeAd.sponsoredTranslation
+            if (!TextUtils.isEmpty(more))
+                sponsoredLabel.text = more
+
+            // Create a list of clickable views
+            val clickableViews = mutableListOf<View>()
+            if (adBean.naIconClick) {
+                clickableViews.add(nativeAdIcon)
+            }
+
+            if (adBean.naTitleClick) {
+                clickableViews.add(nativeAdTitle)
+            }
+
+//            if (adBean.naDescClick) {
+//                clickableViews.add(nativeAdTitle)
+//            }
+
+            clickableViews.add(nativeAdCallToAction)
+
+            // Register the Title and CTA button to listen for clicks.
+            //必须在主线程调用
+            nativeAd.registerViewForInteraction(
+                adView,
+                nativeAdMedia,
+                nativeAdIcon,
+                clickableViews
+            )
+
+            NativeAdBase.NativeComponentTag.tagView(nativeAdIcon, NativeAdBase.NativeComponentTag.AD_ICON)
+
+            preShowFacebookAdView = adView
+            //跳转activity
+            val intent = Intent(context, ShowAdActivity::class.java)
+            intent.putExtra("ad", "fb")
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-        val more = nativeAd.sponsoredTranslation
-        if (!TextUtils.isEmpty(more))
-            sponsoredLabel.text = more
-
-        // Create a list of clickable views
-        val clickableViews = mutableListOf<View>()
-        clickableViews.add(nativeAdTitle)
-        clickableViews.add(nativeAdCallToAction)
-
-        // Register the Title and CTA button to listen for clicks.
-        //必须在主线程调用
-        nativeAd.registerViewForInteraction(
-            adView,
-            nativeAdMedia,
-            clickableViews
-        )
-
-        preShowFacebookAdView = parentView
-        //跳转activity
-        val intent = Intent(context, ShowAdActivity::class.java)
-        intent.putExtra("ad", "fb")
-        context.startActivity(intent)
     }
 
     //原生banner广告
